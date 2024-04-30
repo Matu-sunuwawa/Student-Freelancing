@@ -1,0 +1,26 @@
+{% extends 'myapp/main.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<!-- Delete Carts -->
+<section class="bg-gradient-to-b from-neutral-800 to-neutral-600 text-white py-6 lg:py-0 lg:py-6 lg:grid lg:grid-cols-3 lg:gap-4 lg:items-center lg:h-screen">
+    <div></div>
+    <div class="bg-gradient-to-b from-neutral-800 to-neutral-600 shadow-lg px-4 py-6 rounded-md">
+        <div class="py-6">
+            <h3 class="text-xl font-semibold py-2">Are You Sure To Delete?</h3>
+        </div>
+        <div class="card-body my-5 flex space-x-4">
+            <a href="{% url 'cartpage' %}">
+                <button type="submit" class="p-1 text-black rounded-md bg-slate-100 hover:bg-slate-300">Cancel</button>
+            </a>
+            <form action="" method="post">
+                {% csrf_token %}
+                <button type="submit" class="p-1 text-black rounded-md bg-slate-100 hover:bg-slate-300">Confirm</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

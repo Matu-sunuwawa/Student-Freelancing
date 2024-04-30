@@ -1,0 +1,41 @@
+
+{% extends 'myapp/main.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<style>
+
+    input[type=text],input[type=password]{
+        border: 1px solid rgb(82 82 82);
+        border-radius: 0.375rem;
+        padding: 0.25rem;
+        color: black;
+    }
+
+    label{
+        padding-top: 10px;
+        display: block;
+    }
+</style>
+
+    <section class="bg-gradient-to-b from-neutral-800 to-neutral-600 text-white py-6 lg:py-0 lg:py-6 lg:grid lg:grid-cols-3 gap-4 lg:items-center lg:h-screen">
+        <div></div>
+        <div class="bg-gradient-to-b from-neutral-800 to-neutral-600 shadow-lg px-4 py-6 rounded-md">
+            <div class="py-6">
+                <h3 class="text-xl font-semibold py-2">Welcome Make Your Day!</h3>
+            </div>
+            <div>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="p-1 text-black rounded-md bg-slate-100 hover:bg-slate-300">Register</button>
+                </form>
+                <br>
+                <p>Already Have Account??? <a href="{% url 'login' %}">Login</a></p>
+            </div>
+        </div>
+        <div></div>
+    </section>
+
+{% endblock %}

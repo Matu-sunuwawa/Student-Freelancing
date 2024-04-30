@@ -1,0 +1,184 @@
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="owner" content="This E-commerce Website Developed by Ful-Stack-Developer Mr. Matyas Sina(Software Engineer)">
+        <title>E-commerce</title>
+        <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+
+        
+        <script type="text/javascript">
+            var user = '{{request.user}}'
+
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            const csrftoken = getCookie('csrftoken');
+        </script>
+    </head>
+    <body class="bg-neutral-600">
+
+        <!-- nav bar -->
+
+        <nav class="">
+            <div class="container mx-auto flex justify-between px-4 py-6 text-white">
+                <span><img src="{% static 'image/logo.png'%}" alt=""></span>
+                <div class="hidden lg:flex lg:space-x-4">
+                    <a href="#" class="flex space-x-2 text-lg text-black font-medium items-center px-2">
+                        <form action="{% url 'searchpage' %}" method="get" enctype="multipart/form-data">
+                            <button type="submit">{{form.as_p}}</button>
+                        </form>                   
+                    </a>
+                    <a href="#" class="flex space-x-2 text-lg font-medium items-center px-2 hover:text-gray-200">Contact</a>
+                    <a href="#" class="flex space-x-2 text-lg font-medium items-center px-2 hover:text-gray-200">About</a>
+                    <a href="#" class="flex space-x-2 text-lg font-medium items-center px-2 hover:text-gray-200">Help</a>
+                </div>
+                <div class="hidden lg:flex lg:space-x-4">
+                    <div class="flex">
+                        <div>
+                            <input class="rounded-md border-solid text-black p-1" type="text" placeholder="Search...">
+                            <button class="p-1 text-black rounded-md bg-slate-100 hover:bg-slate-300">Search</button>
+                        </div>
+                        <div class="px-1">
+                            {% if user.is_authenticated %}
+                                <form action="{% url 'logout' %}" method="post">
+                                    {% csrf_token %}
+                                    <button class="p-1 text-black rounded-md bg-slate-100 hover:bg-slate-300">Logout</button>
+                                </form>
+                            {% else %}
+                                <form action="{% url 'login' %}" method="post">
+                                    {% csrf_token %}
+                                    <button class="p-1 text-black rounded-md bg-slate-100 hover:bg-slate-300">Login</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <a href="{% url 'cartpage' %}" class="flex">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                        </svg>
+                        <div>
+                            {% if request.user.is_authenticated %}
+                                <sup class="counting text-[#ff0000] font-medium bg-white rounded-full text-lg p-1">{{cartItems}}</sup>
+                            {% else %}
+                                <sup class="counting text-[#ff0000] font-medium bg-white rounded-full text-lg p-1">0</sup>
+                            {% endif %}
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Menu -->
+
+                <div class="menu lg:hidden">
+                    <button class="menu_d">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M12 17.25h8.25" />
+                        </svg>  
+                    </button>
+                    <div class="menu_disp absolute top-0 right-0 z-50 h-full transition ease-in-out duration-300 hidden">
+                        <div class="text-white bg-gradient-to-b from-neutral-800 to-neutral-600 min-h-full">
+                            <button href="#" class="menu_h px-4 py-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                </svg>                              
+                            </button>
+                            <div class="grid grid-row-4 px-4">
+                                <div class="w-full">
+                                    <a href="#" class="flex space-x-2 rounded-xl items-center px-2 py-2 hover:text-gray-200">
+                                        <p>Category</p>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                        </svg>                  
+                                    </a>
+                                </div>
+                                <a href="#" class="space-x-2 rounded-xl items-center px-2 py-2 hover:text-gray-200">Contact</a>
+                                <a href="#" class="space-x-2 rounded-xl items-center px-2 py-2 hover:text-gray-200">About</a>
+                                <a href="#" class="space-x-2 rounded-xl items-center px-2 py-2 hover:text-gray-200">Help</a>
+                            </div>
+                            <div class="flex space-x-4 px-4">
+                                <div>
+                                    <div class="flex">
+                                        <input class="rounded-xl border-solid text-black p-1" type="text" placeholder="Search...">
+                                        <button class="p-1 text-black rounded-md bg-slate-100 hover:bg-slate-300">Search</button>
+                                    </div>
+                                    <div class="px-2 py-4 flex">
+                                        {% if user.is_authenticated %}
+                                            <form action="{% url 'logout' %}" method="post">
+                                                {% csrf_token %}
+                                                <button class="p-1 text-black rounded-md bg-slate-100 hover:bg-slate-300">Logout</button>
+                                            </form>
+                                        {% else %}
+                                            <form action="{% url 'login' %}" method="post">
+                                                {% csrf_token %}
+                                                <button class="p-1 text-black rounded-md bg-slate-100 hover:bg-slate-300">Login</button>
+                                            </form>
+                                        {% endif %}
+                                        <a href="{% url 'cartpage' %}" class="flex px-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                                            </svg>
+                                            <div>
+                                                <sup class="counting text-[#ff0000] font-medium bg-white rounded-full text-lg">0</sup>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>     
+        </nav>
+
+
+        <section>
+            {% block content %}
+
+            {% endblock content %}    
+        </section>
+
+
+
+
+        <script>
+            const menu = document.querySelectorAll('.menu')
+
+            menu.forEach(item => {
+                const menu_disp = item.querySelector('.menu_disp')
+                const menu_butt1 = item.querySelector('.menu_d')
+                const menu_butt2 = item.querySelector('.menu_h')
+
+                menu_butt1.addEventListener('click', () => {
+                    const isthereone = menu_disp.classList.contains('hidden')
+                
+                if(isthereone) {
+                    menu_disp.classList.remove('hidden')
+                }
+                });
+
+                menu_butt2.addEventListener('click', () => {
+                    menu_disp.classList.add('hidden')
+                });
+
+            });
+        </script>
+
+        <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+    </body>
+</html>

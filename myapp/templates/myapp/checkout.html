@@ -1,0 +1,188 @@
+{% extends 'myapp/main.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<!-- Review Page -->
+<section class="container mx-auto py-10 lg:py-20 bg-gradient-to-b from-neutral-600 to-neutral-800">
+    <div class="mx-auto block lg:grid lg:grid-cols-2 gap-2 bg-white px-4 py-6 lg:w-3/4">
+        <div class="grid grid-row-2 gap-4 py-4">
+            <div class="grid grid-row-2 gap-2 bg-white shadow-lg px-4 py-6 rounded-md">
+                <div>
+                    <h3 class="text-xl font-semibold py-2">Review Freelancers And Hiring</h3>
+                </div>
+                {% for item in checkout %}
+                    <div class="flex justify-between items-center">
+                        <div class="grid grid-cols-2 gap-2 items-center">
+                            <img src="../media/{{ item.product.image }}" alt="" class="w-20 h-30 bg-gradient-to-b from-neutral-600 to-neutral-800 rounded">
+                            <div class="px-4">
+                                <h3 class="text-xl font-bold">{{ item.product.name }}</h3>
+                                <p class="text-slate-600 text-xs">kg level</p>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="font-bold">{{ item.get_total }}ETB</p>
+                            <p class="text-xs">Quantity:{{ item.quantity }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="bg-white shadow-lg px-4 py-6 rounded-md tcontainer">
+                <div class="flex justify-between py-6">
+                    <h3 class="text-xl font-semibold dynamic">Delivery information</h3>
+                    <button class="p-1 text-black text-sm font-medium rounded-xl bg-slate-100 hover:bg-slate-300 infoadd">Edit Information</button>
+                </div>
+                <div class="grid grid-cols-4 gap-2 form1">
+                    {% for add in address %}
+                        <div class="space-y-4">
+                            <h3 class="font-medium">Name:</h3>
+                            <h3 class="font-medium">Address:</h3>
+                            <h3 class="font-medium">City:</h3>
+                            <h3 class="font-medium truncate">Zip Code:</h3>
+                            <h3 class="font-medium">Mobile:</h3>
+                            <h3 class="font-medium">Email:</h3>
+                        </div>
+                        <div class="space-y-4 col-span-3">
+                            <p class="text-slate-600">{{ request.user }}</p>
+                            <p class="text-slate-600 truncate">{{ add.address }}</p>
+                            <p class="text-slate-600">{{ add.city }}</p>
+                            <p class="text-slate-600">{{ add.postal_code }}</p>
+                            <p class="text-slate-600">{{ add.phone_number }}</p>
+                            <p class="text-slate-600 truncate">{{ add.email }}</p>
+                        </div>
+                    {% empty %}
+                    <div class="space-y-4">
+                        <h3 class="font-medium">Name:</h3>
+                        <h3 class="font-medium">Address:</h3>
+                        <h3 class="font-medium">City:</h3>
+                        <h3 class="font-medium truncate">Zip Code:</h3>
+                        <h3 class="font-medium">Mobile:</h3>
+                        <h3 class="font-medium">Email:</h3>
+                    </div>
+                    <div class="space-y-4 col-span-3">
+                        <p class="text-slate-600">null</p>
+                        <p class="text-slate-600 truncate">null</p>
+                        <p class="text-slate-600">null</p>
+                        <p class="text-slate-600">null</p>
+                        <p class="text-slate-600">null</p>
+                        <p class="text-slate-600 truncate">null</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                <!--  -->
+                <div class="grid grid-cols-4 gap-2 form2 hidden">
+                    <form action="{% url 'editinfo' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <br>
+                        <button type="submit" class="p-2 w-full text-black rounded-xl bg-slate-100 hover:bg-slate-300 font-semibold text-xl">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white shadow-lg px-4 py-6 rounded-md">
+            <div class="pb-2">
+                <h3 class="text-xl font-semibold">Order Summery</h3>
+            </div>
+            <hr class="px-4">
+            <div class="py-2">
+                <h1 class="font-semibold text-[#FF0000]">Order total:    {{ order.get_cart_total }}ETB</h1>
+            </div>
+            <hr class="px-4">
+            <div class="py-2">
+                <h3 class="font-semibold">Payment Details</h3>
+            </div>
+            <hr>
+            <div class="py-2 pcontainer">
+                <div class="mx-auto lg:mx-0 grid grid-cols-4 gap-2 size-1/2">
+                    <img class="bg-white p-1" src="{% static 'image/telebirr_R.webp' %}" alt="">
+                    <img class="bg-white p-1" src="{% static 'image/cbe_R.webp' %}" alt="">
+                    <img class="bg-white p-1" src="{% static 'image/coop_R.webp' %}" alt="">
+                    <img class="bg-white p-1" src="{% static 'image/dashen_R.webp'%}" alt="">
+                    <img class="bg-white p-1" src="{% static 'image/buna_R.webp'%}" alt="">
+                    <img class="bg-white p-1" src="{% static 'image/awash_R.webp' %}" alt="">
+                    <img class="bg-white p-1" src="{% static 'image/abs_R.webp'%}" alt="">
+                    <img class="bg-white p-1" src="{% static 'image/zemen_R.webp'%}" alt="">
+                </div>
+                <div class="py-4">
+                    <button class="p-2 w-full text-black rounded-xl bg-slate-100 hover:bg-slate-300 font-semibold text-xl payment option">Pay</button>
+                    <div class="hidden chapa">
+                        <form method="POST" action="https://api.chapa.co/v1/hosted/pay" target="_blank" >
+                            <input type="hidden" name="public_key" value="CHAPUBK_TEST-hp9buUs7Diszv6NJ2RPM3vkaKxLxhTuY" />
+                            <input type="hidden" name="tx_ref" id="uniqueid" />
+                            <input type="hidden" name="amount" value="{{order.get_cart_total}}" />
+                            <input type="hidden" name="currency" value="ETB" />
+                            {% for add in address %}
+                                <input type="hidden" name="email" value="{{add.email}}" /> <!-- We will see the email -->
+                                <input type="hidden" name="first_name" value="{{request.user}}" />
+                            {% endfor %}
+                            <input type="hidden" name="title" value="Let us do this" />
+                            <input type="hidden" name="description" value="Paying with Confidence with cha" />
+                            <input type="hidden" name="logo" value="https://chapa.link/asset/images/chapa_swirl.svg" />
+                            <input type="hidden" name="callback_url" value="http://127.0.0.1:8000/ecom/checkout/" />
+                            <input type="hidden" name="meta[title]" value="test" />
+                            <button type='submit' class="p-2 w-full text-black rounded-xl bg-lime-400 hover:bg-lime-400 font-semibold text-xl">Pay with chapa</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script>
+    const accordionItems = document.querySelectorAll('.tcontainer');
+    
+    accordionItems.forEach(item => {
+        const form1 = item.querySelector('.form1');
+        const form2 = item.querySelector('.form2');
+        const button = item.querySelector('.infoadd');
+    
+        button.addEventListener('click', () => {
+        const isOpen = form1.classList.contains('hidden');
+        const isTrue = form2.classList.contains('hidden');
+        form1.classList.add('hidden')
+        form2.classList.add('hidden')
+        if (isOpen) {
+            form1.classList.remove('hidden');
+            button.classList.remove('text-xl','font-semibold')
+            button.innerHTML='Edit Information'
+        }
+        else if(isTrue){
+            form2.classList.remove('hidden');
+            button.classList.add('text-xl','font-semibold')
+            button.innerHTML='&#8592;'
+        }
+        });
+    });
+</script>
+<script>
+    const paymentItems = document.querySelectorAll('.pcontainer');
+    
+    paymentItems.forEach(item => {
+        const form1 = item.querySelector('.option');
+        const form2 = item.querySelector('.chapa');
+        const button = item.querySelector('.payment');
+    
+        button.addEventListener('click', () => {
+        const isTrue = form2.classList.contains('hidden');
+        form2.classList.add('hidden')
+        button.classList.add('bg-slate-100','hover:bg-slate-300')
+        form1.innerHTML='Pay'
+        if(isTrue){
+            form2.classList.remove('hidden');
+            button.classList.remove('bg-slate-100','hover:bg-slate-300')
+            form1.innerHTML='&#10006;'
+        }
+        });
+    });
+
+    var id = "negade-tx-" + Math.random().toString(16).slice(2)
+    console.log(id)
+
+    uniqueid.value = id;
+</script>
+
+{% endblock content %}
